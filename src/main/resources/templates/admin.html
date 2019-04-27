@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'/>
+    </meta>
+    <script src="js/admin.js"></script>
+
+<style>
+body {
+    font-family: "Lato", sans-serif;
+}
+
+ .centerLayer {
+            margin-left: 30%;
+            width: 40%;
+            padding: 10px;
+        }
+        #myDiv { 
+          margin-top: 5%;
+        }
+
+
+.sidenav {
+    height: 80%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 20%;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.main {
+    margin-left: 200px; /* Same as the width of the sidenav */
+    font-size: 18px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+</style>
+
+<script type="text/javascript">
+
+function openbox(id){
+    display = document.getElementById(id).style.display; 
+//    if(display=='none'){
+       document.getElementById(id).style.display='block';
+//    }else{
+//       document.getElementById(id).style.display='none';
+//    }
+}
+
+function hide(id1, id2){
+        document.getElementById(id1).style.display='none';
+    document.getElementById(id2).style.display='none';
+    document.getElementById(id3).style.display='none';
+}
+</script>
+
+</head>
+<body ng-app="admin" ng-controller="AdminController">
+
+<div class="container" th:replace="fragments/header :: header">
+</div>
+
+<div class="sidenav" sec:authorize="isAuthenticated()" >
+  <a href="#" ng-click="clear()" onclick="openbox('users'); hide('animeAdd', 'searchAnime'); return false">Пользователи</a>
+  <a href="#" ng-click="clear()" onclick="openbox('animeAdd'); hide('users', 'searchAnime'); return false">Добавить <br/> аниме</a>
+  <a href="#" ng-click="clear()" onclick="openbox('searchAnime'); hide('users', 'animeAdd'); return false">Редактировать <br/> аниме</a>
+</div>
+
+<div class="main" sec:authorize="isAuthenticated()">
+  <div id="users" ng-controller="getList" class='container centerLayer'>
+    <h2 align='center'>Список пользователей</h2>
+    <table id="bookTable" class='table table-striped'>
+        <thead>
+        <tr>
+            <th>Аватар</th>
+            <th >Имя пользователя</th>
+            <th > Действие</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in userList">
+                <td><img src="{{user.avatar}}"/></td>
+                <td type="text" name="usrName">{{user.login}}</td>
+                <td><input class="btn btn-default" type="button" value="Удалить" ng-click="delete(user.login)" /></td>
+            </tr>
+          
+        </tbody>
+    </table>
+</div>
+
+    <form class="col-sm-6 centerLayer" method='POST' id="animeAdd" style="display: none;" >
+        <h3 align='center'>Добавить аниме</h3>
+        <div class="form-group">
+            <div class="alert alert-danger" ng-show="isAddError">
+                <strong text="#{sample.error}">Error!</strong> {{errorMessage}}
+            </div>
+            <div class="alert alert-success" ng-show="isSuccess">
+                <strong text="#{sample.error}"></strong>Аниме успешно добавлено!
+            </div>
+            <label for="animeName" text="#{book.name}">Название:</label>
+            <input type="text" name='animeName' ng-model="animeName" class="form-control" id="animeName"/>
+        </div>
+        <div class="form-group">
+            <label for="pictureLink" text="#{book.author}">Ссылка на обложку:</label>
+            <input type="text" name='pictureLink'  ng-model="pictureLink" class="form-control" id="pictureLink"/>
+        </div>
+        <div class="form-group">
+            <label for="videoLink" text="#{book.publisher}">Ссылка на видео:</label>
+            <input type='text' name='videoLink' ng-model="videoLink"  class="form-control" id="videoLink"/>
+        </div>
+        <div class="form-group">
+            <label for="translator" text="#{book.publisher}">Переводчик:</label>
+            <input type='text' name='translator' ng-model="translator"  class="form-control" id="translator"/>
+        </div>
+        <div class="form-group">
+            <label for="year" text="#{book.publisher}">Год выпуска:</label>
+            <input type='text' name='year' ng-model="year"  class="form-control" id="year"/>
+        </div>
+        <div class="form-group" ng-controller="getGenre">
+            <label>Жанр</label>
+            <select class="form-control" ng-model='selection.selectedmethod' ng-init="selection.selectedmethod=gen" name="titleGenre" ng-options="genre.name for genre in genreList">
+            </select>
+        </div>
+        <div class="form-group" ng-controller="getVoice">
+            <label>Озвучка</label>
+            <!--<select class="form-control" ng-model="voice" name="voice" >-->
+                <!--<option  ng-repeat="voice in voiceList" value="{{voice.name}}">{{voice.name}}</option>-->
+
+            <!--</select>-->
+            <select class="form-control" ng-model='selection.selectedvoice' ng-init="selection.selectedvoice=vc" name="titleVoice" ng-options="voice.name for voice in voiceList">
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Описание</label>
+            <textarea name='description' ng-model="description"  class="form-control" id="description" rows="4"></textarea>
+        </div>
+        <button type="submit" ng-click="addTitle(animeName,pictureLink,videoLink,translator,year, description)" name='add' class="btn btn-default" text="#{sample.buttonAdd}">Добавить</button>
+    </form>
+
+    <!--UPDATE-->
+
+    <div id="searchAnime" style="display: none;">
+        <form class="centerLayer" method='GET'>
+            <div class="alert alert-danger" ng-show="isSearchError">
+                <strong text="#{sample.error}">Error!</strong> {{errorMessage}}
+            </div>
+            <div class="input-group">
+                <input type="text" class="form-control" name='search' ng-model="name" placeholder="Search"/>
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit" ng-click="search(name)">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form class="col-sm-6 centerLayer" method='POST' >
+            <div class="form-group">
+                <div class="alert alert-danger" ng-show="isUpdateError">
+                    <strong text="#{sample.error}">Error!</strong> {{errorMessage}}
+                </div>
+                <div class="alert alert-success" ng-show="isUpdated">
+                    <strong text="#{sample.error}"></strong>Аниме успешно обновлено!
+                </div>
+                <div class="alert alert-success" ng-show="isDelete">
+                    <strong text="#{sample.error}"></strong>Аниме удалено!
+                </div>
+
+                <input style="display: none;"  type="text" name='animeId' ng-model="animeId" class="form-control" id="animeId"/>
+                <label for="animeNameS" text="#{book.name}">Название:</label>
+                <input type="text" name='animeNameS' ng-model="animeNameS" class="form-control" id="animeNameS"/>
+            </div>
+            <div class="form-group">
+                <label for="pictureLinkS" text="#{book.author}">Ссылка на обложку:</label>
+                <input type="text" name='pictureLinkS'  ng-model="pictureLinkS" class="form-control" id="pictureLinkS"/>
+            </div>
+            <div class="form-group">
+                <label for="videoLinkS" text="#{book.publisher}">Ссылка на видео:</label>
+                <input type='text' name='videoLinkS' ng-model="videoLinkS"  class="form-control" id="videoLinkS"/>
+            </div>
+            <div class="form-group">
+                <label for="translatorS" text="#{book.publisher}">Переводчик:</label>
+                <input type='text' name='translatorS' ng-model="translatorS"  class="form-control" id="translatorS"/>
+            </div>
+            <div class="form-group">
+                <label for="yearS" text="#{book.publisher}">Год выпуска:</label>
+                <input type='text' name='yearS' ng-model="yearS"  class="form-control" id="yearS"/>
+            </div>
+            <div class="form-group">
+                <label for="genreS" text="#{book.publisher}">Жанр:</label>
+                <input type='text' name='genreS' ng-model="genreS"  class="form-control" id="genreS"/>
+            </div>
+            <div class="form-group">
+                <label for="voiceS" text="#{book.publisher}">Озвучка:</label>
+                <input type='text' name='voiceS' ng-model="voiceS"  class="form-control" id="voiceS"/>
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea name='descriptionS' ng-model="descriptionS"  class="form-control" id="descriptionS" rows="8"></textarea>
+            </div>
+            <div style="display: inline-block;">
+            <button type="submit" ng-click="updateTitle(animeId,animeNameS,pictureLinkS,videoLinkS,translatorS,  yearS, genreS, voiceS, descriptionS)" name='update' class="btn btn-default" text="#{sample.buttonUpdate}">Изменить</button>
+            <button type="submit" ng-click="deleteTitle(animeNameS)" name='add' class="btn btn-default" text="#{sample.buttonAdd}">Удалить</button>
+            <button type="submit" ng-click="clear()" name='add' class="btn btn-default" text="#{sample.buttonAdd}">Очистить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html> 
+

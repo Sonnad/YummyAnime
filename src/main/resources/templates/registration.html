@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+        <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+        <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <script src="js/registration.js"></script>
+    </head>
+    <body ng-app="registration" ng-controller="RegistrationController">
+        <style type="text/css">
+
+            body {
+                background: #eee !important;
+            }
+
+            .wrapper {
+                margin-top: 80px;
+                margin-bottom: 80px;
+            }
+
+            .form-signin {
+                max-width: 380px;
+                padding: 15px 35px 45px;
+                margin: 0 auto;
+                background-color: #fff;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .form-signin-heading,
+            .form-control {
+                position: relative;
+                font-size: 16px;
+                height: auto;
+                padding: 10px;
+            @include box-sizing(border-box);
+            }
+            input[type="text"] {
+                margin-bottom: -0.1px;
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            input[type="password"] {
+                margin-bottom: 20px;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+
+
+        </style>
+        <nav class="navbar navbar-inverse" th:replace="fragments/header :: header">
+        </nav>
+        <div class="wrapper" sec:authorize="isAnonymous()">
+            <form class="form-signin">
+                <h2 class="form-signin-heading">Registration</h2>
+                <div class="alert alert-success" role="alert" ng-show="isSuccess">
+                    <strong>Success</strong>
+                </div>
+                <div class="alert alert-danger" ng-show="isError" >
+                    <strong>Error!</strong> {{errorMessage}}
+                </div>
+                <input type="text" class="form-control" translator="username" placeholder="Username" required="" autofocus="" ng-model="username" />
+                <input type="password" class="form-control" translator="password" placeholder="Password" required="" ng-model="password" />
+                <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="signup(username, password)">Register</button>
+            </form>
+        </div>
+    </body>
+</html>

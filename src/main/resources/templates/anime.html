@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="js/sample.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link href="http://vjs.zencdn.net/6.4.0/video-js.css" rel="stylesheet"/>
+
+	<!-- If you'd like to support IE8 -->
+	<script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+	<script src="js/anime.js"></script>
+</head>
+<body>
+<style>
+	.video-container {
+		position: relative;
+		padding-bottom: 55%;
+		padding-top: 3.5%;
+		height: 0;
+		overflow: hidden;
+	}
+
+	.otstup {
+		position: relative;
+		padding-left: 10%;
+		padding-right: 10%;
+		padding-top: 3%;
+	}
+
+	.video-container iframe,
+	.video-container object,
+	.video-container embed {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	li {
+		list-style-type: none; /* Убираем маркеры */
+	}
+
+	.sod {
+		background-color: #FF6347;
+		display:inline-block;
+		height: 100%;
+		width: 13%;
+	}
+
+	.tab {
+		/*background-color: red !important;*/
+		text-align: justify;
+		background-color: #222;
+		height: 50px;
+		border-color: #080808;
+		border-bottom-width: 5px; /* Толщина линии внизу */
+		border-bottom-style: solid; /* Стиль линии внизу */
+		border-bottom-color: #FF6347; /* Цвет линии внизу */
+		margin: 0;
+		padding: 0;
+
+	}
+
+	.spis {
+		padding-top: 5%;
+	}
+
+	.ottop {
+		padding-top: 2%;
+	}
+
+	.tabtext{
+		line-height: 30px;
+		color: white;
+		text-align: center;
+		top: 50%;
+	}
+
+	.left_container {
+		width: 10%;
+		float: left;
+		min-height: 120px;
+	}
+
+	.right_container {
+		width: 90%;
+		float: right;
+		min-height: 120px;
+	}
+
+</style>
+<div class="container" th:replace="fragments/header :: header">
+</div>
+
+<div class="container" >
+	<div class="row ottop">
+		<div class="col-md-6">
+			<img src="#" th:src="${title.picture}" alt="" align="right"/>
+		</div>
+		<div class="col-md-6">
+			<b><h3 th:text="${title.name}">Anime Name</h3></b> <br/>
+			<b>Год выпуска:</b> <span th:text="${title.year}"> </span> <br/>
+			<b>Жанр:</b> <span th:text="${title.genre.name}"> </span> <br />
+			<b>Перевод субтитров:</b> <span th:text="${title.translator}"> </span> <br />
+			<b>Озвучка:</b> <span th:text="${title.voice.name}"> </span> <br />
+		</div>
+	</div>
+
+	<div class="otstup">
+		<p th:text="${title.description}">
+		</p>
+	</div>
+
+	<div class="row spis">
+		<ul class="tab">
+			<li class="sod"> <h5 class="tabtext">ВИДЕО</h5></li>
+		</ul>
+	</div>
+
+
+	<div class="row">
+		<div class="video-container" align="center">
+			<video id="my-video" class="video-js" controls="controls" preload="auto" width="900" height="600"
+				   th:poster="${title.picture}" data-setup="{}">
+				<source src="#" th:src="${title.video}" type='video/mp4'/>
+				<p class="vjs-no-js">
+					To view this video please enable JavaScript, and consider upgrading to a web browser that
+					<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+				</p>
+			</video>
+
+			<script src="http://vjs.zencdn.net/6.4.0/video.js"></script>
+		</div>
+	</div>
+
+	<div class="row">
+		<ul class="tab">
+			<li class="sod"> <h5 class="tabtext">КОММЕНТАРИИ</h5></li>
+		</ul>
+	</div>
+
+	<div class="container ottop" th:each="element : ${list}">
+		<div>
+			<div class="col-md-4 left_container">
+				<img src="#" th:src="${element.user.avatar}" alt="" align="right"/>
+			</div>
+			<div class="col-md-8 right_container">
+				<b><p th:text="${element.user.login}">Sonad</p></b> <br/>
+				<p th:text="${element.text}">Текст</p>
+			</div>
+			<hr align="center" width="80%" size="6" />
+		</div>
+	</div>
+
+
+</div>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 
+
+<head>
+    <link href="#" rel="stylesheet" media="screen" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="#" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+</head>
+<body>
+    <div class="container" th:fragment="header">
+        <div class="row">
+            <h1>Yummy Anime</h1>
+            <div class="navbar navbar-inverse">
+                <div class="container">
+                    <div class="navbar-header">
+
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="" th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active' : ''}"><a href="#" th:href="@{/}">
+                                <span class="glyphicon glyphicon-home"></span>
+                                <b>Home</b></a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li sec:authorize="isAnonymous()" th:classappend="${#httpServletRequest.getRequestURI() == '/registration' ? 'active' : ''}">
+                                <a href="#" th:href="@{/registration}">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <b th:text="#{header.signup}" th:remove="tag">Sign Up</b>
+                                </a>
+                            </li>
+                            <li sec:authorize="isAnonymous()" th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active' : ''}">
+                                <a href="#" th:href="@{/login}" >
+                                    <span class="glyphicon glyphicon-log-in"></span>
+                                    <b th:text="#{header.login}" th:remove="tag">Login</b>
+                                </a>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="#" th:href="@{/admin}" >
+                                    <span class="glyphicon"></span>
+                                    <b>Админка</b>
+                                </a>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="#" th:href="@{/logout}" >
+                                    <span class="glyphicon glyphicon-log-out"></span>
+                                    <b th:text="#{header.logout}" th:remove="tag">Logout</b>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
